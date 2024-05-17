@@ -34,3 +34,40 @@ This is a clone of the AirBnB Website.
 	## models/engine directory will contain all storage classes (using the same prototype). 
 	## For the moment you will have only one: file_storage.py
 
+# Description of th command line interpreter
+	+ This responds to commands
+	+ we will use the cmd module, The cmd module makes it easy to make command 
+	  line interfaces in your programs.
+	+ The module defines only one class: the Cmd class. Creating a command line interpreter 
+	  is done by sub-classing the cmd.Cmd class.
+	+ The do_xxx method should only take one extra parameter. This parameter corresponds to 
+	  the part of the string entered by the user after the command name. The job of do_xxx 
+          is to parse this string and to find the command parameter's values.
+	+ In the most common case: commands shouldn't return a value.
+	+ The exception is when you want to exit the interpreter loop: any command that 
+	  returns a true value stops the interpreter.
+	## Example
+		### The following function defines a command which takes two numerical 
+		    arguments and prints the result of the addition:
+
+
+			def do_add(self,s):
+    			l = s.split()
+    			if len(l)!=2:
+      				 print "*** invalid number of arguments"
+       			return
+    			try:
+      				 l = [int(i) for i in l]
+    			except ValueError:
+       			print "*** arguments should be numbers"
+       			return
+    			print l[0]+l[1]
+
+		### Now if you run the interpreter, you will have:
+
+
+			(Cmd) add 4
+			*** invalid number of arguments
+			(Cmd) add 5 4
+			9
+
