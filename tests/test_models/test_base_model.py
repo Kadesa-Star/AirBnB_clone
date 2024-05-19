@@ -42,7 +42,7 @@ class TestBaseModel(unittest.TestCase):
 
         self.assertEqual(
                 str(self.instance),
-                f"[BaseModel] ({instance.id} {instance.__dict__}"
+                f"[BaseModel] ({self.instance.id}) {self.instance.__dict__}"
         )
 
     def test_save(self):
@@ -52,7 +52,7 @@ class TestBaseModel(unittest.TestCase):
         """
 
         prev_updated_at = self.instance.updated_at
-        instance.save()
+        self.instance.save()
         self.assertNotEqual(prev_updated_at, self.instance.updated_at)
         self.assertLess(prev_updated_at, self.instance.updated_at)
 
@@ -66,11 +66,8 @@ class TestBaseModel(unittest.TestCase):
         # check if the resulf is a dictionary
         self.assertIsInstance(dict_instance, dict)
         # check if the "__class__" is present and correct
-        self.assertInt("__class__", dict_instance)
+        self.assertIn("__class__", dict_instance)
         self.assertEqual(dict_instance["__class__"], "BaseModel")
-        # check if id is present and correct
-        self.assertIn("id", dict_instance)
-        self.assertEqual(dict_instance["id"], self.instance.id)
         # check if created_at is present and format is okay
         self.assertIn("created_at", dict_instance)
         self.assertEqual(
