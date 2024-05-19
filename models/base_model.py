@@ -32,6 +32,7 @@ class BaseModel:
         """
         to_json = {
             '__class__': self.__class__.__name__,
+            'id': self.id,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat(),
         }
