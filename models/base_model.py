@@ -1,12 +1,15 @@
 #!/usr/bin/python3
+"""This is the Base Class all other  classes inherit from it"""
 import json
 from uuid import uuid4
 from datetime import datetime
 import os
 
+
 class BaseModel:
     """this class defines all common attributes/methods for other classes"""
-    #serial_objc = {}
+
+    # serial_objc = {}
     def __init__(self) -> None:
         self.id = str(uuid4())
         self.created_at = datetime.now()
@@ -15,9 +18,9 @@ class BaseModel:
     def __str__(self) -> str:
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
-    
     # here we save our data in a file
     def save(self) -> None:
+
         self.updated_at = datetime.now()
     """
         self.serial_objc[self.new_k()] = self.to_dict()
@@ -46,10 +49,9 @@ class BaseModel:
                     self.serial_objc[i] = j
 """
 
+
 # instances of the class
 User1 = BaseModel()
 print(User1)
-#User1.reload()
-#User1.save()
-
-
+# User1.reload()
+User1.save()
