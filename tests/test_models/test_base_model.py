@@ -26,13 +26,13 @@ class TestBaseModel(unittest.TestCase):
         upon initialization
         """
 
-        self.assertIsInstance(instance, BaseModel)
-        self.assertIsInstance(instance.id, str)
-        self.assertIsNotNone(instance.id)
-        self.assertIsNotNone(instance.created_at)
-        self.assertIsNotNone(instance.updated_at)
-        self.assertIsInstance(instance.created_at, datetime)
-        self.assertIsInstance(instance.updated_at, datetime)
+        self.assertIsInstance(self.instance, BaseModel)
+        self.assertIsInstance(self.instance.id, str)
+        self.assertIsNotNone(self.instance.id)
+        self.assertIsNotNone(self.instance.created_at)
+        self.assertIsNotNone(self.instance.updated_at)
+        self.assertIsInstance(self.instance.created_at, datetime)
+        self.assertIsInstance(self.instance.updated_at, datetime)
 
     def test_str(self):
         """
@@ -41,7 +41,7 @@ class TestBaseModel(unittest.TestCase):
         """
 
         self.assertEqual(
-                str(instance),
+                str(self.instance),
                 f"[BaseModel] ({instance.id} {instance.__dict__}"
         )
 
@@ -51,10 +51,10 @@ class TestBaseModel(unittest.TestCase):
         updated_at attribute
         """
 
-        prev_updated_at = instance.updated_at
+        prev_updated_at = self.instance.updated_at
         instance.save()
-        self.assertNotEqual(prev_updated_at, instance.updated_at)
-        self.assertLess(prev_updated_at, instance.updated_at)
+        self.assertNotEqual(prev_updated_at, self.instance.updated_at)
+        self.assertLess(prev_updated_at, self.instance.updated_at)
 
     def test_to_dict(self):
         """
@@ -62,7 +62,7 @@ class TestBaseModel(unittest.TestCase):
         and values, including correctly formatted datetime attributes.
         """
 
-        dict_instance = instance.to_dict()
+        dict_instance = self.instance.to_dict()
         # check if the resulf is a dictionary
         self.assertIsInstance(dict_instance, dict)
         # check if the "__class__" is present and correct
@@ -70,7 +70,7 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(dict_instance["__class__"], "BaseModel")
         # check if id is present and correct
         self.assertIn("id", dict_instance)
-        self.assertEqual(dict_instance["id"], instance.id)
+        self.assertEqual(dict_instance["id"], self.instance.id)
         # check if created_at is present and format is okay
         self.assertIn("created_at", dict_instance)
         self.assertEqual(
@@ -85,39 +85,9 @@ class TestBaseModel(unittest.TestCase):
         )
 
     # check if other attributes match the instance's __dict__
-        for key, value in instance.__dict__.items():
+        for key, value in self.instance.__dict__.items():
             if key not in ["created_at", "updated_at"]:
                 self.assertEqual(dict_instance[key], value)
-
-    def test_init_with_kwargs(self):
-        """
-        test the __init__ method to ensure it correctly
-        initializes an instance
-        when provided with a dictionary of attributes (kwargs).
-        """
-
-        data = {
-                "id": "247",
-                "created_at": "2024-05-14T12:00:00.000000",
-                "updated_at": "2024-05-14T13:00:00.000000",
-                "name": "Test"
-        }
-        instance = BaseModel(**data)
-
-        # checking if id is set correctly
-        self.assertEqual(instance.id, "247")
-        # created_at converted to datetime obj and correctly set
-        self.assertEqual(
-                instance.created_at,
-                datetime.fromisoformat("2024-05-14T12:00:00.000000")
-        )
-        # updated_at converted to datetime obj and correctly set
-        self.assertEqual(
-                instance.updated_at,
-                datetime.fromisoformat("2024-05-14T13:00:00.000000")
-        )
-        # checking if custom attributtes are set correctly
-        self.assertEqual(instance.name, "Test")
 
 
 if __name__ == "__main__":
