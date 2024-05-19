@@ -9,8 +9,10 @@ from datetime import datetime
 class BaseModel:
     """this class defines all common attributes/methods for other classes"""
 
-    # serial_objc = {}
     def __init__(self):
+        """
+        Initialize the Base Model
+        """
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = self.created_at
