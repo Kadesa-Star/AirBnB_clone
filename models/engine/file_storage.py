@@ -5,7 +5,6 @@ and deserializes JSON file to instances
 """
 
 import json
-from os.path import exists
 from models.base_model import BaseModel
 
 
@@ -50,13 +49,12 @@ class FileStorage:
         """
         Deserializes the JSON file to __objects, if the JSON file exists.
         """
-        if exists(self.__file_path):
-            with open(self.__file_path, 'r') as file:
-                contents = json.load(file)
-                for k, v in contents.items():
-                    nombre_clase = v['__class__']
+        with open(self.__file_path, 'r') as file:
+            contents = json.load(file)
+            for k, v in contents.items():
+                nombre_clase = v['__class__']
 
-                    # here we are dynamically mapping the class
-                    if nombre_clase in self.CLASSES:
-                        instance = self.CLASSES[nombre_clase](**v)
-                        self.__objects[k] = instance
+                # here we are dynamically mapping the class
+                if nombre_clase in self.CLASSES:
+                    instance = self.CLASSES[nombre_clase](**v)
+                    self.__objects[k] = instance
