@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """This is the Base Class all other  classes inherit from it"""
 
-
 import uuid
 from datetime import datetime
+import models
 
 
 class BaseModel:
@@ -14,15 +14,16 @@ class BaseModel:
         Initialize the Base Model
         """
         if kwargs:
-            for key, value in kwargs.items():
-                if key == "created_at" or key == "updated_at":
-                    value = datetime.fromisoformat(value)
-                if key != "__class__":
-                    setattr(self, key, value)
+            for k, v in kwargs.items():
+                if k == "created_at" or k == "updated_at":
+                    v = datetime.fromisoformat(v)
+                if k != "__class__":
+                    setattr(self, k, v)
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
+            models.storage.new(self)
 
     def __str__(self):
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
@@ -32,6 +33,7 @@ class BaseModel:
         update the updated_at attribute with the current datetime
         """
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """
