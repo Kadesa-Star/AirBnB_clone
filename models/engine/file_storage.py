@@ -8,16 +8,16 @@ import json
 from os.path import exists
 from models.base_model import BaseModel
 
+
 class FileStorage:
     """
     serializes instances to a JSON file
     and deserializes JSON file to instance
     """
-    
+
     CLASSES = {'BaseModel': BaseModel}
     __file_path = "file.json"
     __objects = {}
-
 
     def all(self):
         """
@@ -34,7 +34,7 @@ class FileStorage:
         key = f"{obj.__class__.__name__}.{obj.id}"
 
         self.__objects[key] = obj
-    
+
     def save(self):
         """
         we will use this method to persist in a file storage
@@ -44,7 +44,7 @@ class FileStorage:
             serial_obj[k] = v.to_dict()
 
         with open(self.__file_path, 'w') as file:
-            json.dump(serial_obj, file, indent = 2)
+            json.dump(serial_obj, file, indent=2)
 
     def reload(self):
         """
@@ -60,4 +60,3 @@ class FileStorage:
                     if nombre_clase in self.CLASSES:
                         instance = self.CLASSES[nombre_clase](**v)
                         self.__objects[k] = instance
-
