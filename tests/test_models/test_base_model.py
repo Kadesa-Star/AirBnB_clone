@@ -7,6 +7,7 @@ This file contains all the test cases for the Basemodel Class
 import unittest
 from datetime import datetime
 from models.base_model import BaseModel
+import models
 
 
 class TestBaseModel(unittest.TestCase):
