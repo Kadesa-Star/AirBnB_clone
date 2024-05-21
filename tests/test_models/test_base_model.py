@@ -21,7 +21,7 @@ class TestBaseModel(unittest.TestCase):
         """
         self.instance = BaseModel()
 
-    def test_initialiation(self):
+    def test_initialization(self):
         """
         Tests to ensure BaseModel has the correct attributes
         upon initialization
@@ -34,6 +34,39 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsNotNone(self.instance.updated_at)
         self.assertIsInstance(self.instance.created_at, datetime)
         self.assertIsInstance(self.instance.updated_at, datetime)
+
+    def test_initialization_from_kwargs(self):
+        """
+        Test initialization from a dictionary representation
+        """
+        data = {
+                'id': '1234',
+                'created_at': '2024-05-17T12:34:56.789012',
+                'updated_at': '2024-05-17T12:34:56.789012',
+                'name': 'Test'
+        }
+        self.instance = BaseModel(**data)
+        self.assertEqual(self.instance.id, '1234')
+        self.assertEqual(
+                self.instance.created_at, datetime.fromisoformat(
+                    '2024-05-17T12:34:56.789012'))
+        self.assertEqual(
+                self.instance.updated_at, datetime.fromisoformat(
+                    '2024-05-17T12:34:56.789012'))
+        self.assertEqual(self.instance.name, 'Test')
+
+    def test_invalid_datetime_kwargs_format(self):
+        """
+        Handling invalid datetime format in dict representation
+        """
+        data = {
+                'id': '1234',
+                'created_at': 'invalid_date',
+                'updated_at': 'invalide_date',
+                'name': 'Test'
+        }
+        with self.assertRaises(ValueError):
+            self.instance = BaseModel(**data)
 
     def test_str(self):
         """
@@ -63,6 +96,7 @@ class TestBaseModel(unittest.TestCase):
         and values, including correctly formatted datetime attributes.
         """
 
+        self.instance.name = "Test"
         dict_instance = self.instance.to_dict()
         # check if the resulf is a dictionary
         self.assertIsInstance(dict_instance, dict)
