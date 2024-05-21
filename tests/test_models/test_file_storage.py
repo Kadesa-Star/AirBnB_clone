@@ -37,17 +37,34 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn(key, self.objects)
         self.assertEqual(self.objects[key], obj)
 
+    def test_new_invalid_object(self):
+        """
+        Test new raises an error when an invalid object is passed
+        """
+        with self.assertRaises(AttributeError):
+            self.storage.new("invalid_object")
+
     def test_save(self):
         """Test that save serializes objects to a file"""
         obj = BaseModel()
         self.storage.new(obj)
-        self.storage.save(obj)
+        self.storage.save()
         with open(self.file_path, 'r') as file:
             data = json.load(file)
         key = f"{obj.__class__.__name__}.{obj.id}"
         self.assertIn(key, data)
         self.assertEqual(data[key]['id'], obj.id)
         self.assertEqual(data[key]['__class__'], 'BaseModel')
+
+    def test_save_empty_objects(self):
+        """
+        test that save correctly handles empty __objects
+        """
+        FileStorage._FileStorage__objects = {}
+        self.storage.save()
+        with open(self.file_path, 'r') as file:
+            data = json.load(file)
+        self.assertEqual(data, {})
 
     def test_reload(self):
         """Test that reload deserializes objects from a file"""
@@ -68,6 +85,15 @@ class TestFileStorage(unittest.TestCase):
         FileStorage._FileStorage__objects = {}
         self.storage.reload()
         self.assertEqual(self.objects, {})
+
+    def test_reload_corrupted_file(self):
+        """
+        Test that reload handles a corrupted file gracefully
+        """
+        with open(self.file_path, 'w') as file:
+            file.write("invalid content")
+        with self.assertRaises(json.JSONDecodeError):
+            self.storage.reload()
 
 
 if __name__ == "__main__":
