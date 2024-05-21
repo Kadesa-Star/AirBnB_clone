@@ -5,6 +5,7 @@ and deserializes JSON file to instances
 """
 
 import json
+import os
 from models.base_model import BaseModel
 
 
@@ -38,9 +39,7 @@ class FileStorage:
         """
         we will use this method to persist in a file storage
         """
-        serial_obj = {}
-        for k, v in self.__objects.items():
-            serial_obj[k] = v.to_dict()
+        serial_obj = {k: v.to_dict() for k, v in self.__objects.items()}
 
         with open(self.__file_path, 'w') as file:
             json.dump(serial_obj, file, indent=2)
@@ -49,12 +48,12 @@ class FileStorage:
         """
         Deserializes the JSON file to __objects, if the JSON file exists.
         """
-        with open(self.__file_path, 'r') as file:
-            contents = json.load(file)
-            for k, v in contents.items():
-                nombre_clase = v['__class__']
+        if os.path.exists(self.__file_path):
+            with open(self.__file_path, 'r') as file:
+                contents = json.load(file)
+                for k, v in contents.items():
+                    nombre_clase = v['__class__']
 
-                # here we are dynamically mapping the class
-                if nombre_clase in self.CLASSES:
-                    instance = self.CLASSES[nombre_clase](**v)
-                    self.__objects[k] = instance
+                    # here we are dynamically mapping the class
+                    if nombre_clase in self.CLASSES:
+                        self.__objects[k] = self.CLASSES[nombre_clase](**v)
