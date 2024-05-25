@@ -41,19 +41,24 @@ class FileStorage:
         """
         serial_obj = {k: v.to_dict() for k, v in self.__objects.items()}
 
-        with open(self.__file_path, 'w') as file:
+        with open(self.__file_path, 'w', encoding="utf-8") as file:
             json.dump(serial_obj, file, indent=2)
 
     def reload(self):
         """
         Deserializes the JSON file to __objects, if the JSON file exists.
         """
-        if os.path.exists(self.__file_path):
-            with open(self.__file_path, 'r') as file:
-                contents = json.load(file)
-                for k, v in contents.items():
-                    nombre_clase = v['__class__']
+        if os.path.isfile(self.__file_path):
+            with open(self.__file_path, 'r', encoding="utf-8") as file:
+                try:
+                    contents = json.load(file)
+                    for k, v in contents.items():
+                        nombre_clase = v['__class__']
 
-                    # here we are dynamically mapping the class
-                    if nombre_clase in self.CLASSES:
-                        self.__objects[k] = self.CLASSES[nombre_clase](**v)
+                        # here we are dynamically mapping the class
+                        if nombre_clase in self.CLASSES:
+                            instance = self.CLASSES[nombre_clase](**v)
+                            self.__objects[k] = instance
+                except json.JSONDecodeError:
+                    # handle the error gracefully by doing nothing
+                    pass

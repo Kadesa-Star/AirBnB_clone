@@ -13,18 +13,21 @@ class BaseModel:
         """
         Initialize the Base Model
         """
-
-        self.id = str(uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        t_format = "%Y-%m-%dT%H:%M:%S.%f"
         if kwargs:
             for k, v in kwargs.items():
-                if k == "created_at" or k == "updated_at":
-                    v = datetime.fromisoformat(v)
-                if k != "__class__":
+                if k == "__class__":
+                    continue
+                elif k == "created_at" or k == "updated_at":
+                    setattr(self, k, datetime.strptime(v, t_format))
+                else:
                     setattr(self, k, v)
         else:
-            models.storage.new(self)
+            self.id = str(uuid4())
+            self.created_at = datetime.utcnow()
+            self.updated_at = datetime.utcnow()
+
+        models.storage.new(self)
 
     def __str__(self):
         """ this returns the string repr of basemodel instance """
@@ -34,7 +37,7 @@ class BaseModel:
         """
         update the updated_at attribute with the current datetime
         """
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.utcnow()
         models.storage.save()
 
     def to_dict(self):
