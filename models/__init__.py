@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 """
 This magic method belongs to the models directory
 """
