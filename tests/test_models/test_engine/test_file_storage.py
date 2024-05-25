@@ -6,15 +6,39 @@ This are the Test Cases for the file_storage
 import unittest
 import os
 import json
+import models
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
+
+
+class TestFileStorageInstantiation(unittest.TestCase):
+    """
+    This is testing for the instantiation of the file_storage
+    """
+
+    def test_FileStorage_instantiation_without_args(self):
+        """ this is testing for creation of FileStorage without arguments"""
+        self.assertEqual(type(FileStorage()), FileStorage)
+
+    def test_FileStorage_instantiation_with_args(self):
+        # creating a file storage with an argument
+        # this should raise a TypeError
+        with self.assertRaises(TypeError):
+            FileStorage(None)
+
+    def test_storage_initialize(self):
+        # is the storage variable in models an instance of FileStorage
+        self.assertEqual(type(models.storage), FileStorage)
 
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class """
 
     def setUp(self):
-        """Set up test environment"""
+        """
+        Set up test environment by creating a temp testfile
+        for saving data
+        """
         self.storage = FileStorage()
         self.file_path = FileStorage._FileStorage__file_path
         self.objects = FileStorage._FileStorage__objects
@@ -92,8 +116,10 @@ class TestFileStorage(unittest.TestCase):
         """
         with open(self.file_path, 'w') as file:
             file.write("invalid content")
-        with self.assertRaises(json.JSONDecodeError):
+        try:
             self.storage.reload()
+        except json.JSONDecodeError:
+            self.fail("reload() raided JSONDecodeError unexpectdly")
 
 
 if __name__ == "__main__":
