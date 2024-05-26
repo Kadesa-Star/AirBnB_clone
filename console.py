@@ -5,7 +5,6 @@ This is the entry point of the command interpreter
 import cmd
 
 
-
 class HBNBCommand(cmd.Cmd):
     """ command interpreter for HBNB"""
 
@@ -24,7 +23,6 @@ class HBNBCommand(cmd.Cmd):
         # ensure a new line is printed before exiting
         print()
         return True
-
 
 
 if __name__ == "__main__":
