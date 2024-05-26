@@ -21,6 +21,12 @@ class TestBaseModel(unittest.TestCase):
         """
         self.instance = BaseModel()
 
+    def tearDown(self):
+        """
+        tear down test environment if necessary
+        """
+        pass
+
     def test_initialization(self):
         """
         Tests to ensure BaseModel has the correct attributes
@@ -68,17 +74,6 @@ class TestBaseModel(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.instance = BaseModel(**data)
 
-    def test_str(self):
-        """
-        test the __str_ method ensuring it returns correct
-        string representation
-        """
-
-        self.assertEqual(
-                str(self.instance),
-                f"[BaseModel] ({self.instance.id}) {self.instance.__dict__}"
-        )
-
     def test_save(self):
         """
         test the save method ensuring it updates the
@@ -120,6 +115,16 @@ class TestBaseModel(unittest.TestCase):
         for key, value in self.instance.__dict__.items():
             if key not in ["created_at", "updated_at"]:
                 self.assertEqual(dict_instance[key], value)
+
+    def test_str(self):
+        """
+        test the __str_ method ensuring it returns correct string repr
+        """
+
+        self.assertEqual(
+            str(self.instance),
+            f"[BaseModel] ({self.instance.id}) {self.instance.__dict__}"
+        )
 
 
 if __name__ == "__main__":
