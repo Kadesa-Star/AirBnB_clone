@@ -22,7 +22,7 @@ class BaseModel:
                 if k == "__class__":
                     continue
                 elif k == "created_at" or k == "updated_at":
-                    self.__dict__[k] = datetime.strptime(v, t_format))
+                    self.__dict__[k] = datetime.strptime(v, t_format)
                 else:
                     self.__dict__[k] = v
         else:
