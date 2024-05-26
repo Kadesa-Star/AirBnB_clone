@@ -22,9 +22,9 @@ class BaseModel:
                 if k == "__class__":
                     continue
                 elif k == "created_at" or k == "updated_at":
-                    setattr(self, k, datetime.strptime(v, t_format))
+                    self.__dict__[k] = datetime.strptime(v, t_format))
                 else:
-                    setattr(self, k, v)
+                    self.__dict__[k] = v
         else:
             models.storage.new(self)
 
@@ -40,9 +40,9 @@ class BaseModel:
         Return a dictionary representation of instance
         """
         this_dict = self.__dict__.copy()
-        this_dict['__class__'] = self.__class__.__name__
         this_dict['created_at'] = self.created_at.isoformat()
         this_dict['updated_at'] = self.updated_at.isoformat()
+        this_dict['__class__'] = self.__class__.__name__
         return this_dict
 
     def __str__(self):
