@@ -39,10 +39,13 @@ class FileStorage:
         """
         we will use this method to persist in a file storage
         """
-        serial_obj = {k: v.to_dict() for k, v in self.__objects.items()}
+        serial_obj = {}
+        all_objs = self.__objects
+        for obj in all_objs.keys():
+            serial_obj[obj] = all_objs[obj].to_dict()
 
         with open(self.__file_path, 'w', encoding="utf-8") as file:
-            json.dump(serial_obj, file, indent=2)
+            json.dump(serial_obj, file)
 
     def reload(self):
         """

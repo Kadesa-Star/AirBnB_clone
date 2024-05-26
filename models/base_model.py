@@ -14,6 +14,9 @@ class BaseModel:
         Initialize the Base Model
         """
         t_format = "%Y-%m-%dT%H:%M:%S.%f"
+        self.id = str(uuid4())
+        self.created_at = datetime.utcnow()
+        self.updated_at = datetime.utcnow()
         if kwargs:
             for k, v in kwargs.items():
                 if k == "__class__":
@@ -23,15 +26,7 @@ class BaseModel:
                 else:
                     setattr(self, k, v)
         else:
-            self.id = str(uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = datetime.utcnow()
-
-        models.storage.new(self)
-
-    def __str__(self):
-        """ this returns the string repr of basemodel instance """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+            models.storage.new(self)
 
     def save(self):
         """
@@ -49,3 +44,7 @@ class BaseModel:
         this_dict['created_at'] = self.created_at.isoformat()
         this_dict['updated_at'] = self.updated_at.isoformat()
         return this_dict
+
+    def __str__(self):
+        """ this returns the string repr of basemodel instance """
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
